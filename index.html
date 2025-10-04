@@ -49,9 +49,9 @@
       font-size: 1.2rem;
       font-weight: 600;
       border-bottom: 1px solid var(--border);
+      background-color: var(--bg-primary);
       position: sticky;
       top: 0;
-      background-color: var(--bg-primary);
       z-index: 10;
     }
 
@@ -101,12 +101,32 @@
       position: sticky;
       top: 0;
       background: var(--bg-card);
-      z-index: 10;
+      z-index: 15;
       border-bottom: 1px solid var(--border);
+      border-radius: 12px 12px 0 0;
     }
 
-    .ql-toolbar { border: none !important; background: var(--bg-card); }
-    .ql-container { border: none !important; background: var(--bg-card); color: var(--text-primary); min-height: 250px; }
+    .ql-toolbar {
+      border: none !important;
+      background: var(--bg-card);
+    }
+
+    .ql-toolbar button svg {
+      stroke: var(--text-primary) !important;
+    }
+
+    .ql-toolbar button:hover svg {
+      stroke: var(--accent) !important;
+    }
+
+    .ql-container {
+      border: none !important;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      min-height: 250px;
+      border-radius: 0 0 12px 12px;
+    }
+
     .ql-editor { color: var(--text-primary); }
     .ql-editor::before { color: #777 !important; }
 
@@ -204,13 +224,45 @@
       write: `
         <div class="card"><h3>Create a New Post</h3><p>Use the RTF editor below to compose your blog post.</p></div>
         <div id="editor-wrapper">
-          <div id="toolbar-container"></div>
+          <!-- ✅ Toolbar explicitly defined here -->
+          <div id="toolbar-container">
+            <span class="ql-formats">
+              <select class="ql-header">
+                <option value="1"></option>
+                <option value="2"></option>
+                <option selected></option>
+              </select>
+              <button class="ql-bold"></button>
+              <button class="ql-italic"></button>
+              <button class="ql-underline"></button>
+              <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+              <select class="ql-color"></select>
+              <select class="ql-background"></select>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-list" value="ordered"></button>
+              <button class="ql-list" value="bullet"></button>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-link"></button>
+              <button class="ql-image"></button>
+              <button class="ql-video"></button>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-clean"></button>
+            </span>
+          </div>
+
           <div id="editor-container"></div>
         </div>
+
         <div class="editor-actions">
           <button class="btn" onclick="saveDraft()">💾 Save Draft</button>
           <button class="btn" onclick="previewPost()">👀 Preview</button>
         </div>
+
         <div id="preview-container"></div>
       `,
       profile: `
@@ -243,19 +295,12 @@
     }
 
     function initQuill() {
-      const toolbarOptions = [
-        [{ header: [1, 2, false] }],
-        ["bold", "italic", "underline", "strike"],
-        [{ color: [] }, { background: [] }],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["link", "image"],
-        ["clean"]
-      ];
       quill = new Quill("#editor-container", {
-        modules: { toolbar: { container: "#toolbar-container", handlers: {} } },
+        modules: { toolbar: "#toolbar-container" },
         theme: "snow",
-        placeholder: "Start writing your story here...",
+        placeholder: "Start writing your story here..."
       });
+
       const saved = localStorage.getItem("demblog_draft");
       if (saved) quill.root.innerHTML = saved;
     }
