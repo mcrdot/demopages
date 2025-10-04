@@ -1,0 +1,223 @@
+<!-- cpt = 68bc51b4-dfd0-832e-a88c-5ee43081b8d1 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TeleBlog – Modern Blogging App</title>
+
+  <style>
+    :root {
+      --bg-primary: #111;
+      --bg-card: #1e1e1e;
+      --text-primary: #f5f5f5;
+      --text-secondary: #aaa;
+      --accent: #4a76d0;
+      --border: #2c2c2c;
+    }
+
+    body.light {
+      --bg-primary: #fafafa;
+      --bg-card: #ffffff;
+      --text-primary: #222;
+      --text-secondary: #555;
+      --accent: #4a76d0;
+      --border: #e5e5e5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", sans-serif; }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background-color: var(--bg-primary);
+      z-index: 10;
+    }
+
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 15px;
+      transition: background 0.3s, border 0.3s;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+
+    .card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .card .actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      background: var(--accent);
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn:hover { opacity: 0.9; }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      z-index: 20;
+    }
+
+    .nav-item {
+      text-align: center;
+      flex: 1;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: color 0.3s;
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .nav-item i {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+    }
+
+    /* Theme Switch */
+    .theme-toggle {
+      border: none;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--border);
+      color: var(--accent);
+    }
+
+    /* Scroll & Mobile adjustments */
+    ::-webkit-scrollbar { width: 0; }
+    @media (max-width: 600px) {
+      .card { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span>TeleBlog</span>
+    <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+  </header>
+
+  <main>
+    <div class="card">
+      <h3>Welcome to TeleBlog</h3>
+      <p>Start sharing your thoughts with the world. Write your first post and inspire others!</p>
+      <div class="actions">
+        <button class="btn">Create Post</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Trending Topics</h3>
+      <p>Discover the most popular blogs, news, and stories shared by creators across the platform.</p>
+      <div class="actions">
+        <button class="btn">Explore</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Your Stats</h3>
+      <p>Views: 2.3K • Likes: 480 • Comments: 92</p>
+      <div class="actions">
+        <button class="btn">View Analytics</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="selectNav(this)">
+      <i>🏠</i>Home
+    </div>
+    <div class="nav-item" onclick="selectNav(this)">
+      <i>🔍</i>Explore
+    </div>
+    <div class="nav-item" onclick="selectNav(this)">
+      <i>📝</i>Write
+    </div>
+    <div class="nav-item" onclick="selectNav(this)">
+      <i>👤</i>Profile
+    </div>
+  </nav>
+
+  <script>
+    // Active nav highlight
+    function selectNav(el) {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // Light/Dark theme toggle
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+      const btn = document.querySelector('.theme-toggle');
+      btn.textContent = document.body.classList.contains('light') ? '🌙' : '☀️';
+    }
+  </script>
+</body>
+</html>
